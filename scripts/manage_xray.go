@@ -162,6 +162,8 @@ func GetXrayStatus() (string, error) {
 
 // Сбор метрик сервера
 func GetServerMetrics() (string, error) {
-	// Реализация сбора метрик
+
+	// когда-нибудь тут что-то появится.
+	
 	return "Server metrics", nil
 }
