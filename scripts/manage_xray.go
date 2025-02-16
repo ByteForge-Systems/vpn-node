@@ -64,6 +64,18 @@ func saveConfig(clients []Client) error {
 	return os.WriteFile(utils.GetEnv("CONFIG_PATH"), newData, 0644)
 }
 
+// Запуск Xray
+func StartXray() error {
+	cmd := exec.Command("systemctl", "start", "xray")
+	return cmd.Run()
+}
+
+// Остановка Xray
+func StopXray() error {
+	cmd := exec.Command("systemctl", "stop", "xray")
+	return cmd.Run()
+}
+
 // Перезапуск Xray
 func RestartXray() error {
 	cmd := exec.Command("systemctl", "restart", "xray")

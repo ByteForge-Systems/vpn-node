@@ -8,6 +8,8 @@ import (
 func SetupManagementRoutes(router *gin.Engine) {
 	management := router.Group("/api/management")
 	{
+		management.POST("/start", handlers.StartXray)
+		management.POST("/stop", handlers.StopXray)
 		management.POST("/restart", handlers.RestartXray)
 		management.GET("/status", handlers.GetXrayStatus)
 	}
