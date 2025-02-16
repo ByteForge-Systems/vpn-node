@@ -1,4 +1,4 @@
-module github.com/ByteForge-Systems/vpn-api
+module github.com/ByteForge-Systems/vpn-node
 
 go 1.23.5
 

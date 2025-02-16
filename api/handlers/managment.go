@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/ByteForge-Systems/vpn-api/scripts"
+	"github.com/ByteForge-Systems/vpn-node/scripts"
 )
 
 func RestartXray(c *gin.Context) {

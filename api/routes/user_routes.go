@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ByteForge-Systems/vpn-api/api/handlers"
+	"github.com/ByteForge-Systems/vpn-node/api/handlers"
 )
 
 func SetupUserRoutes(router *gin.Engine) {
