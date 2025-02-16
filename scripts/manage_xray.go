@@ -7,13 +7,10 @@ import (
 	"os"
 	"strings"
 	"github.com/google/uuid"
+	"github.com/ByteForge-Systems/vpn-node/utils"
 )
 
 // Логика для управления Xray
-
-const (
-	configPath = "/usr/local/etc/xray/config.json"
-)
 
 type Client struct {
 	ID   string `json:"id"`
@@ -30,7 +27,7 @@ type Config struct {
 
 // Загрузка конфигурации Xray
 func loadConfig() (*Config, error) {
-	data, err := os.ReadFile(configPath)
+	data, err := os.ReadFile(utils.GetEnv("CONFIG_PATH"))
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +41,7 @@ func loadConfig() (*Config, error) {
 
 // Сохранение конфигурации Xray
 func saveConfig(clients []Client) error {
-	data, err := os.ReadFile(configPath)
+	data, err := os.ReadFile(utils.GetEnv("CONFIG_PATH"))
 	if err != nil {
 		return err
 	}
@@ -64,7 +61,7 @@ func saveConfig(clients []Client) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(configPath, newData, 0644)
+	return os.WriteFile(utils.GetEnv("CONFIG_PATH"), newData, 0644)
 }
 
 // Перезапуск Xray
@@ -129,7 +126,7 @@ func GenerateVLESSLink(userID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	publicKey := "Ivxj3onvH96bRecsbASk6MThhM0nQXinPQFamD3eeGM" // вынести?
+	publicKey := utils.GetEnv("PUBLIC_KEY")
 	vlessLink := fmt.Sprintf("vless://%s@%s:443?security=reality&encryption=none&pbk=%s&fp=chrome&type=tcp&flow=xtls-rprx-vision-udp443&sni=www.cloudflare.com#XrayVPN",
 		userID, strings.TrimSpace(string(serverIP)), publicKey) // ip сервера в константу?
 	return vlessLink, nil
