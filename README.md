@@ -1,10 +1,10 @@
 Управление пользователями:
-POST /api/user/ — добавить нового пользователя.
-DELETE /api/user/{id} — удалить пользователя.
-GET /api/user/{id}/link — сгенерировать VLESS-ссылку.
+1. POST /api/user/ — добавить нового пользователя.
+2. DELETE /api/user/{id} — удалить пользователя.
+3. GET /api/user/{id}/link — сгенерировать VLESS-ссылку.
 
 Управление Xray:
-POST /api/management/restart — перезапустить Xray.
-GET /api/management/status — получить статус Xray.
-POST /api/management/start — запустить Xray.
-POST /api/management/stop — остановить Xray.
+1. POST /api/management/restart — перезапустить Xray.
+2. GET /api/management/status — получить статус Xray.
+3. POST /api/management/start — запустить Xray.
+4. POST /api/management/stop — остановить Xray
