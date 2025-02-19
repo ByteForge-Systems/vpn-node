@@ -10,6 +10,7 @@ func SetupUserRoutes(router *gin.Engine) {
 	{
 		user.POST("/", handlers.AddUser)
 		user.DELETE("/:id", handlers.RemoveUser)
+		user.POST("/all/slice", handlers.ListAllUsers)
 		user.GET("/:id/link", handlers.GenerateVLESSLink)
 	}
 }

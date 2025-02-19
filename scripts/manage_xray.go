@@ -82,6 +82,20 @@ func RestartXray() error {
 	return cmd.Run()
 }
 
+// все пользователи
+func listUsers() ([]string, error) {
+    config, err := loadConfig()
+    if err != nil {
+        return nil, err
+    }
+
+    var users []string
+    for _, client := range config.Inbounds[0].Settings.Clients {
+        users = append(users, client.ID)
+    }
+    return users, nil
+}
+
 // Генерация нового пользователя
 func GenerateUser() (string, error) {
 	newUUID := uuid.New().String()
