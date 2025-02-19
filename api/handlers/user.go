@@ -20,7 +20,7 @@ func AddUser(c *gin.Context) {
 func ListAllUsers(c *gin.Context) {
     users, err := scripts.ListUsers()
     if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
         return
     }
 
