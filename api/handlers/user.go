@@ -1,29 +1,40 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
-	"github.com/gin-gonic/gin"
+
 	"github.com/ByteForge-Systems/vpn-node/scripts"
+	"github.com/gin-gonic/gin"
 )
+
 // Обработчик для эндпоинтов пользователей
 
 func AddUser(c *gin.Context) {
-	userID, err := scripts.GenerateUser()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+    var request struct {
+        UUID string `json:"uuid"`
+    }
 
-	c.JSON(http.StatusOK, gin.H{"id": userID})
+    if err := c.BindJSON(&request); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+        return
+    }
+    
+    userID, err := scripts.GenerateUser(request.UUID)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"id": userID})
 }
 
 func ListAllUsers(c *gin.Context) {
-    users, err := scripts.ListUsers()
+    users, err := scripts.ListUsers() // слайс
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
         return
     }
-
     c.JSON(http.StatusOK, gin.H{"users": users})
 }
 
