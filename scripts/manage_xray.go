@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"os"
 	"strings"
-	"github.com/google/uuid"
 	"github.com/ByteForge-Systems/vpn-node/utils"
 )
 
@@ -83,26 +82,27 @@ func RestartXray() error {
 }
 
 // Генерация нового пользователя
-func GenerateUser() (string, error) {
-	newUUID := uuid.New().String()
-	config, err := loadConfig()
-	if err != nil {
-		return "", err
-	}
-	newClient := Client{
-		ID:   newUUID,
-		Flow: "xtls-rprx-vision",
-	}
-	config.Inbounds[0].Settings.Clients = append(config.Inbounds[0].Settings.Clients, newClient)
-	err = saveConfig(config.Inbounds[0].Settings.Clients)
-	if err != nil {
-		return "", err
-	}
-	err = RestartXray()
-	if err != nil {
-		return "", err
-	}
-	return newUUID, nil
+func GenerateUser(newUUID string) (string, error) {
+    config, err := loadConfig()
+    if err != nil {
+        return "", err
+    }
+    newClient := Client{
+        ID:   newUUID,
+        Flow: "xtls-rprx-vision",
+    }
+    config.Inbounds[0].Settings.Clients = append(config.Inbounds[0].Settings.Clients, newClient)
+
+    err = saveConfig(config.Inbounds[0].Settings.Clients)
+    if err != nil {
+        return "", err
+    }
+
+    err = RestartXray()
+    if err != nil {
+        return "", err
+    }
+    return newUUID, nil
 }
 
 // Удаление пользователя
@@ -150,7 +150,7 @@ func ListUsers() ([]Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	return config.Inbounds[0].Settings.Clients, nil
+	return config.Inbounds[0].Settings.Clients, nil // возвращаю слайс
 }
 
 // Проверка статуса Xray
