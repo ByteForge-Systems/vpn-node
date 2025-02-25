@@ -6,7 +6,6 @@ import (
 	"github.com/ByteForge-Systems/vpn-node/scripts"
 	"github.com/gin-gonic/gin"
 )
-
 // Обработчик для эндпоинтов пользователей
 
 func AddUser(c *gin.Context) {
@@ -34,6 +33,16 @@ func ListAllUsers(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
         return
     }
+    c.JSON(http.StatusOK, gin.H{"users": users})
+}
+
+func ListAllUsers(c *gin.Context) {
+    users, err := scripts.ListUsers()
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+        return
+    }
+
     c.JSON(http.StatusOK, gin.H{"users": users})
 }
 
