@@ -6,11 +6,11 @@ import (
 )
 
 func SetupUserRoutes(router *gin.Engine) {
-	user := router.Group("/api/user")
+	user := router.Group("/api/key")
 	{
 		user.POST("/", handlers.AddUser)
 		user.DELETE("/:id", handlers.RemoveUser)
-		user.POST("/all", handlers.ListAllUsers)
+		user.POST("/", handlers.ListAllUsers)
 		user.GET("/:id/link", handlers.GenerateVLESSLink)
 	}
 }
