@@ -142,7 +142,7 @@ func GenerateVLESSLink(userID string) (string, error) {
 		return "", err
 	}
 	publicKey := utils.GetEnv("PUBLIC_KEY")
-	vlessLink := fmt.Sprintf("vless://%s@%s:445?security=reality&encryption=none&pbk=%s&fp=chrome&type=tcp&flow=xtls-rprx-vision-udp443&sni=www.cloudflare.com#XrayVPN",
+	vlessLink := fmt.Sprintf("vless://%s@%s:443?security=reality&encryption=none&pbk=%s&fp=chrome&type=tcp&flow=xtls-rprx-vision-udp443&sni=www.cloudflare.com#XrayVPN",
 		userID, strings.TrimSpace(string(serverIP)), publicKey)
 	return vlessLink, nil
 }
