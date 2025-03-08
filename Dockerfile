@@ -18,15 +18,14 @@ RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Устанавливаем Xray вручную (скачиваем архив и распаковываем бинарник)
-# Обновлённая версия XRAY_VERSION, которая должна существовать
 RUN wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
     unzip Xray-linux-64.zip -d /usr/local/bin/ && \
     chmod +x /usr/local/bin/xray && \
     rm Xray-linux-64.zip
 
-# Копируем исходный код приложения
+# Копируем весь проект (если go.mod и go.sum есть в корне, они также попадут в контейнер)
 WORKDIR /app
-COPY api /app/api
+COPY . /app
 
 # Копируем скрипт запуска
 COPY entrypoint.sh /entrypoint.sh

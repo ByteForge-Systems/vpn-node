@@ -45,5 +45,5 @@ echo "Ожидание запуска Xray..."
 sleep 3
 
 echo "Запуск Go-приложения..."
-cd /app/api
-exec go run main.go
+cd /app
+exec go run ./api/main.go
