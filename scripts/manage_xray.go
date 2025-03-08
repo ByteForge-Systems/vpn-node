@@ -3,11 +3,12 @@ package scripts
 import (
 	"encoding/json"
 	"fmt"
-	"os/exec"
 	"os"
+	"os/exec"
 	"strings"
-	"github.com/google/uuid"
+
 	"github.com/ByteForge-Systems/vpn-node/utils"
+	"github.com/google/uuid"
 )
 
 // Логика для управления Xray
@@ -66,20 +67,22 @@ func saveConfig(clients []Client) error {
 
 // Запуск Xray
 func StartXray() error {
-	cmd := exec.Command("systemctl", "start", "xray")
-	return cmd.Run()
+	cmd := exec.Command("xray", "-config", utils.GetEnv("CONFIG_PATH"))
+	return cmd.Start()
 }
 
 // Остановка Xray
 func StopXray() error {
-	cmd := exec.Command("systemctl", "stop", "xray")
+	cmd := exec.Command("pkill", "-f", "xray")
 	return cmd.Run()
 }
 
 // Перезапуск Xray
 func RestartXray() error {
-	cmd := exec.Command("systemctl", "restart", "xray")
-	return cmd.Run()
+	if err := StopXray(); err != nil {
+		return err
+	}
+	return StartXray()
 }
 
 // Генерация нового пользователя
@@ -144,7 +147,7 @@ func GenerateVLESSLink(userID string) (string, error) {
 	return vlessLink, nil
 }
 
-// список всех пользователей
+// Список всех пользователей
 func ListUsers() ([]Client, error) {
 	config, err := loadConfig()
 	if err != nil {
@@ -155,24 +158,15 @@ func ListUsers() ([]Client, error) {
 
 // Проверка статуса Xray
 func GetXrayStatus() (string, error) {
-	cmd := exec.Command("systemctl", "status", "xray")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", err
+	cmd := exec.Command("pgrep", "-f", "xray")
+	output, err := cmd.Output()
+	if err != nil || len(output) == 0 {
+		return "Xray is not running", nil
 	}
-	status := strings.Split(string(output), "\n")
-	for _, line := range status {
-		if strings.Contains(line, "Active:") {
-			return line, nil
-		}
-	}
-	return "", nil
+	return "Xray is running", nil
 }
 
 // Сбор метрик сервера
 func GetServerMetrics() (string, error) {
-
-	// когда-нибудь тут что-то появится.
-	
 	return "Server metrics", nil
 }
