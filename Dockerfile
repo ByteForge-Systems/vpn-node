@@ -31,8 +31,8 @@ COPY . /app
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Пробрасываем необходимые порты: 8080 для Go-приложения, 445 для Xray
-EXPOSE 8080 445
+# Пробрасываем необходимые порты: 8080 для Go-приложения, 443 для Xray
+EXPOSE 8080 443
 
 # Запускаем скрипт entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
