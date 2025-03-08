@@ -18,7 +18,8 @@ RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Устанавливаем Xray вручную (скачиваем архив и распаковываем бинарник)
-ENV XRAY_VERSION=1.9.2
+# Обновлённая версия XRAY_VERSION, которая должна существовать
+ENV XRAY_VERSION=1.9.3
 RUN wget https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-64.zip && \
     unzip Xray-linux-64.zip -d /usr/local/bin/ && \
     chmod +x /usr/local/bin/xray && \
