@@ -1,45 +1,34 @@
 FROM ubuntu:latest
 
-# Устанавливаем нужные пакеты и добавляем поддержку Go
-RUN apt-get update && \
-    apt-get install -y curl uuid-runtime wget unzip software-properties-common && \
-    add-apt-repository -y ppa:longsleep/golang-backports && \
-    apt-get update && \
-    apt-get install -y golang-go && \
-    rm -rf /var/lib/apt/lists/*
+# Обновляем apt и устанавливаем необходимые пакеты
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    ca-certificates \
+    build-essential \
+    nano \
+    && rm -rf /var/lib/apt/lists/*
 
-# Загружаем и устанавливаем Xray
-RUN mkdir -p /xray && \
-    curl -L -o /xray/Xray-linux.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
-    unzip /xray/Xray-linux.zip -d /xray && \
-    chmod +x /xray/xray && \
-    mv /xray/xray /usr/local/bin/xray || (ls -l /xray && exit 1)
+# Устанавливаем Go (версия 1.22.5, можно заменить на нужную)
+ENV GO_VERSION=1.22.5
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
+    rm go${GO_VERSION}.linux-amd64.tar.gz
+ENV PATH="/usr/local/go/bin:${PATH}"
 
-# Создаём рабочую директорию
+# Устанавливаем Xray из официального репозитория
+RUN bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+
+# Копируем исходный код приложения
 WORKDIR /app
-
-# Копируем весь проект
-COPY . .
-
-# Настраиваем Go-зависимости
-RUN rm -f go.mod go.sum && \
-    go mod init vpn-node && \
-    go get github.com/gin-gonic/gin && \
-    find . -type f -name "*.go" -exec sed -i 's|github.com/ByteForge-Systems/vpn-node/api/routes|vpn-node/api/routes|g' {} + && \
-    find . -type f -name "*.go" -exec sed -i 's|github.com/ByteForge-Systems/vpn-node/api/handlers|vpn-node/api/handlers|g' {} + && \
-    find . -type f -name "*.go" -exec sed -i 's|github.com/ByteForge-Systems/vpn-node/utils|vpn-node/utils|g' {} + && \
-    find . -type f -name "*.go" -exec sed -i 's|github.com/ByteForge-Systems/vpn-node/scripts|vpn-node/scripts|g' {} + && \
-    go mod tidy
-
-# Копируем конфиг Xray
-COPY xray/config.json /usr/local/etc/xray/config.json
+COPY api /app/api
 
 # Копируем скрипт запуска
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Открываем нужные порты
-EXPOSE 443 3000 8080
+# Пробрасываем необходимые порты: 8080 для Go-приложения, 445 для Xray
+EXPOSE 8080 445
 
-# Запуск контейнера
-CMD ["/entrypoint.sh"]
+# Запускаем скрипт entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
