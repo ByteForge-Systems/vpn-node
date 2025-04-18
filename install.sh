@@ -70,8 +70,21 @@ CONFIG_PATH="/usr/local/etc/xray/config.json"
 # Создаем конфиг
 echo "Создаем конфигурационный файл в $CONFIG_PATH..."
 sudo mkdir -p /usr/local/etc/xray
-cat << EOF | sudo tee $CONFIG_PATH > /dev/null
+sudo tee "$CONFIG_PATH" > /dev/null <<EOF
 {
+  "api": {
+    "services": ["HandlerService", "StatsService"],
+    "tag": "api"
+  },
+  "stats": {},
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserUplink": true,
+        "statsUserDownlink": true
+      }
+    }
+  },
   "inbounds": [
     {
       "port": 443,
@@ -97,6 +110,15 @@ cat << EOF | sudo tee $CONFIG_PATH > /dev/null
           "shortIds": [""]
         }
       }
+    },
+    {
+      "port": 10085,
+      "listen": "127.0.0.1",
+      "protocol": "dokodemo-door",
+      "settings": {
+        "address": "127.0.0.1"
+      },
+      "tag": "api"
     }
   ],
   "outbounds": [
